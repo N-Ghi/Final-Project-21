@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="top-header ">
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="container text-center">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2024 Buddy Study Finder</p>
+            </div>
+        </div>
+</body>
+</html>

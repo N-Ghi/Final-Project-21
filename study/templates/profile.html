@@ -1,0 +1,35 @@
+{%extends 'base.html'%}
+{%block title%}Profile{%endblock%}
+{%block content%}
+<main>
+    <div class="container">
+        <h2>Profile</h2>
+        <form method="POST" action="/profile">
+            {{form.hidden_tag()}}
+
+            {{form.school.label}}
+            {{form.school()}}
+            <br>
+            {{form.primary_language.label}}
+            {{form.primary_language()}}
+            <br>
+            {{form.secondary_languages.label}}
+            {{form.secondary_languages()}}
+            <br>
+            {{form.days.label}}
+            {{form.days()}}
+            <br>
+            {{form.times.label}}
+            {{form.times()}}
+            <br>
+            {{form.strong_subjects.label}}
+            {{form.strong_subjects()}}
+            <br>
+            {{form.weak_subjects.label}}
+            {{form.weak_subjects()}}
+            <br>
+            {{form.submit()}}
+        </form>
+    </div>
+</main>
+{%endblock%}
