@@ -1,16 +1,20 @@
 from flask import *
 from study.forms import *
 from study.db_models import *
+from flask_login import login_required, current_user, login_user, logout_user
+from study import *
 
 def flash_message(message, category):
     flash(message, category)
-#APP routes
+
+# APP routes
 def register_routes(app):
     @app.route('/')
+    @app.route('/home')
     def home():
         return render_template('home.html')
-    
-    #Register Route
+
+    # Register Route
     @app.route('/register', methods=['GET', 'POST'])
     def register():
         form = RegisterForm()
@@ -20,20 +24,37 @@ def register_routes(app):
             password = form.password.data
 
             existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
-            
             if existing_user:
                 flash_message('Username or email already exists. Please choose a different one.', 'danger')
                 return render_template('register.html', form=form)
-            else:
-                new_user = User(username=username, email=email, password=password)
-                db.session.add(new_user)
-                db.session.commit()
-                flash_message('User registered successfully!', 'success')
-                session['username'] = new_user.username
-                return redirect(url_for('profile'))
+
+            new_user = User(username=username, email=email, password=password, confirmed=False)
+            db.session.add(new_user)
+            db.session.commit()
+            send_confirmation_email(new_user.email)
+            flash_message('A confirmation email has been sent via email. Please confirm your email to log in.', 'success')
+            return redirect(url_for('login'))
         return render_template('register.html', form=form)
     
-    #Login Route
+    # Email Confirmation Route
+    @app.route('/confirm/<token>')
+    def confirm_email(token):
+        try:
+            email = confirm_token(token)
+        except:
+            flash_message('The confirmation link is invalid or has expired.', 'danger')
+            return redirect(url_for('login'))
+        
+        user = User.query.filter_by(email=email).first_or_404()
+        if user.confirmed:
+            flash_message('Account already confirmed. Please log in.', 'success')
+        else:
+            user.confirmed = True
+            db.session.commit()
+            flash_message('You have confirmed your account. Thanks!', 'success')
+        return redirect(url_for('login'))
+
+    # Login Route
     @app.route('/login', methods=['GET', 'POST'])
     def login():
         form = LoginForm()
@@ -43,52 +64,61 @@ def register_routes(app):
 
             user = User.query.filter_by(username=username).first()
             if user and user.password == password:
-                session['username'] = user.username
+                if not user.confirmed:
+                    flash_message('Please confirm your email address first.', 'warning')
+                    return render_template('login.html', form=form)
+                login_user(user)
                 flash_message('User logged in successfully!', 'success')
-                if user.profile:
-                    return redirect(url_for('dashboard'))
-                else:
-                    return redirect(url_for('profile'))
+                return redirect(url_for('dashboard' if user.profile else 'profile'))
             else:
                 flash_message('Invalid username or password. Please try again.', 'danger')
                 return render_template('login.html', form=form)
         return render_template('login.html', form=form)
-    
-    #Profile Route
-    @app.route('/profile', methods=['GET', 'POST'])
-    def profile():
-        if 'username' not in session:
-            return redirect(url_for('login'))
 
-        user = User.query.filter_by(username=session['username']).first()
+    # Profile Route
+    @app.route('/profile', methods=['GET', 'POST'])
+    @login_required
+    def profile():
+        user = User.query.filter_by(username=current_user.username).first()
         if user.profile:
             return redirect(url_for('dashboard'))
-        
+
         form = ProfileForm()
-
         if form.validate_on_submit():
-            school = form.school.data
-            primary_language = form.primary_language.data
-            secondary_languages = form.secondary_languages.data
-            days = form.days.data
-            times = form.times.data
-            strong_subjects = form.strong_subjects.data
-            weak_subjects = form.weak_subjects.data
-
-            new_profile = Profile(school=school,
-                                  primary_language=primary_language, secondary_languages=secondary_languages,
-                                  days=days, times=times
-                                  , strong_subjects=",".join(form.strong_subjects.data),
-                                  weak_subjects=",".join(form.weak_subjects.data))
+            new_profile = Profile(
+                username=user.username,
+                school=form.school.data,
+                primary_language=form.primary_language.data,
+                secondary_languages=",".join(form.secondary_languages.data),
+                days=",".join(form.days.data),
+                times=",".join(form.times.data),
+                strong_subjects=",".join(form.strong_subjects.data),
+                weak_subjects=",".join(form.weak_subjects.data)
+            )
             db.session.add(new_profile)
             db.session.commit()
             flash_message('Profile created successfully!', 'success')
             return redirect(url_for('dashboard'))
         return render_template('profile.html', form=form)
-    
-    #Dashboard Route
+
+    # Dashboard Route
     @app.route('/dashboard')
+    @login_required
     def dashboard():
-        if 'username' not in session:
-            return redirect(url_for('login'))
-        return render_template('dashboard.html')
+        if not current_user.confirmed:
+            flash_message('Please confirm your account!', 'warning')
+            return redirect(url_for('unconfirmed'))
+        return "Dashboard"
+    
+    # Logout Route
+    @app.route('/logout')
+    @login_required
+    def logout():
+        logout_user()
+        flash_message('Logged out successfully!', 'success')
+        return redirect(url_for('home'))
+        logout_user()
+        flash_message('Logged out successfully!', 'success')
+        return redirect(url_for('home'))
+    
+ 
