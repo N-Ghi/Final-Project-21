@@ -43,8 +43,8 @@ def register_routes(app):
             email = confirm_token(token)
         except:
             flash_message('The confirmation link is invalid or has expired.', 'danger')
-            return redirect(url_for('login'))
-        
+            return redirect(url_for('resend_confirmation'))
+
         user = User.query.filter_by(email=email).first_or_404()
         if user.confirmed:
             flash_message('Account already confirmed. Please log in.', 'success')
@@ -53,7 +53,21 @@ def register_routes(app):
             db.session.commit()
             flash_message('You have confirmed your account. Thanks!', 'success')
         return redirect(url_for('login'))
-
+    
+    # Re-send Confirmation Route
+    @app.route('/resend_confirmation', methods=['GET', 'POST'])
+    def resend_confirmation():
+        form = ResendConfirmationForm()
+        if form.validate_on_submit():
+            email = form.email.data
+            user = User.query.filter_by(email=email).first()
+            if user and not user.confirmed:
+                send_confirmation_email(user.email)
+                flash_message('A new confirmation email has been sent.', 'success')
+            else:
+                flash_message('Email not found or already confirmed.', 'danger')
+        return render_template('resend_confirmation.html', form=form)
+    
     # Login Route
     @app.route('/login', methods=['GET', 'POST'])
     def login():
@@ -66,7 +80,7 @@ def register_routes(app):
             if user and user.password == password:
                 if not user.confirmed:
                     flash_message('Please confirm your email address first.', 'warning')
-                    return render_template('login.html', form=form)
+                    return redirect(url_for('resend_confirmation'))
                 login_user(user)
                 flash_message('User logged in successfully!', 'success')
                 return redirect(url_for('dashboard' if user.profile else 'profile'))
@@ -107,7 +121,7 @@ def register_routes(app):
     def dashboard():
         if not current_user.confirmed:
             flash_message('Please confirm your account!', 'warning')
-            return redirect(url_for('unconfirmed'))
+            return redirect(url_for('resend_confirmation'))
         return "Dashboard"
     
     # Logout Route
@@ -117,8 +131,3 @@ def register_routes(app):
         logout_user()
         flash_message('Logged out successfully!', 'success')
         return redirect(url_for('home'))
-        logout_user()
-        flash_message('Logged out successfully!', 'success')
-        return redirect(url_for('home'))
-    
- 

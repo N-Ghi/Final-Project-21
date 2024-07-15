@@ -26,3 +26,8 @@ class ProfileForm(FlaskForm):
 class VerifyEmailForm(FlaskForm):
     otp = StringField('Verify your email', validators=[DataRequired(), Length(min=6, max=6)])
     submit = SubmitField('Verify')
+
+
+class ResendConfirmationForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Resend Confirmation Email')

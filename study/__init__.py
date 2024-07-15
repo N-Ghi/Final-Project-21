@@ -1,29 +1,30 @@
-from flask import *
+# __init__.py
+from flask import Flask, render_template, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
-from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
+from dotenv import load_dotenv
 import os
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Debugging print statement
+secret_key = os.getenv('SECRET_KEY')
+print(f"SECRET_KEY (inside __init__.py): {secret_key}")
 
 # Initialize Flask extensions
 db = SQLAlchemy()
 migrate = Migrate()
-mail = Mail()
-s = URLSafeTimedSerializer('your_secret_key')
+s = URLSafeTimedSerializer(secret_key)
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object('study.config.Config')
 
-
-    db_path = 'study.db'
-    if os.path.exists(db_path):
-        os.remove(db_path)
-
     db.init_app(app)
     migrate.init_app(app, db)
-    mail.init_app(app)
     login_manager = LoginManager(app)
     login_manager.login_view = 'login'
 
@@ -51,10 +52,10 @@ def confirm_token(token, expiration=3600):
         return False
     return email
 
+from study.send_email import send_email  # Import the new send_email function
+
 def send_confirmation_email(user_email):
     token = generate_confirmation_token(user_email)
     confirm_url = url_for('confirm_email', token=token, _external=True)
     html = render_template('email/activate.html', confirm_url=confirm_url)
-    msg = Message('Please confirm your email', recipients=[user_email])
-    msg.html = html
-    mail.send(msg)
+    send_email(user_email, 'Please confirm your email', html)

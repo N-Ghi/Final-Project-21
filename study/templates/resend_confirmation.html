@@ -1,0 +1,16 @@
+{%extends 'base.html'%}
+{% block head %}
+    <title>Resend Confirmation Email</title>
+{% endblock %}
+{% block content %}
+    <h1>Resend Confirmation Email</h1>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.email.label }} {{ form.email(size=32) }}
+        </div>
+        <div>
+            {{ form.submit() }}
+        </div>
+    </form>
+{% endblock %}
