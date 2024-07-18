@@ -1,5 +1,5 @@
 {%extends 'base.html'%}
-{%block title%}Profile{%endblock%}
+{%block title%}Create Profile{%endblock%}
 {%block content%}
 <main>
     <div class="container">
@@ -14,22 +14,23 @@
             {{form.primary_language()}}
             <br>
             {{form.secondary_languages.label}}
-            {{form.secondary_languages()}}
+            {{form.secondary_languages(size=5, multiple=True)}}
             <br>
             {{form.days.label}}
-            {{form.days()}}
+            {{form.days(size=7, multiple=True)}}
             <br>
             {{form.times.label}}
-            {{form.times()}}
+            {{form.times(size=3, multiple=True)}}
             <br>
             {{form.strong_subjects.label}}
-            {{form.strong_subjects()}}
+            {{form.strong_subjects(size=5, multiple=True)}}
             <br>
             {{form.weak_subjects.label}}
-            {{form.weak_subjects()}}
+            {{form.weak_subjects(size=5, multiple=True)}}
             <br>
             {{form.submit()}}
         </form>
     </div>
+    <p>To select more that one option, hold down on the Command button on Mac, or the Contorl button on Windows</p>
 </main>
 {%endblock%}

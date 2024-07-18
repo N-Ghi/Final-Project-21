@@ -89,7 +89,7 @@ def register_routes(app):
                 return render_template('login.html', form=form)
         return render_template('login.html', form=form)
 
-    # Profile Route
+    # Create Profile Route
     @app.route('/profile', methods=['GET', 'POST'])
     @login_required
     def profile():
@@ -111,18 +111,59 @@ def register_routes(app):
             )
             db.session.add(new_profile)
             db.session.commit()
-            flash_message('Profile created successfully!', 'success')
+            flash('Profile created successfully!', 'success')
             return redirect(url_for('dashboard'))
         return render_template('profile.html', form=form)
+    
+    # Update Profile Route
+    @app.route('/profile/update', methods=['GET', 'POST'])
+    @login_required
+    def profileupdate():
 
+        user = Profile.query.filter_by(username=current_user.username).first_or_404()
+        form=ProfileForm(obj=user)
+
+        if form.validate_on_submit():
+            user.school = form.school.data
+            user.primary_language = form.primary_language.data
+            user.secondary_languages = ",".join(form.secondary_languages.data)
+            user.days = ",".join(form.days.data)
+            user.times = ",".join(form.times.data)
+            user.strong_subjects = ",".join(form.strong_subjects.data)
+            user.weak_subjects = ",".join(form.weak_subjects.data)
+            db.session.commit()
+            flash('Your profile has been updated!', 'success')
+            return redirect(url_for('profile'))
+
+        return render_template('updateprofile.html', form=form, user=user)
+    
+    # View Profile Route
+    @app.route('/profile/view')
+    @login_required
+    def view_profile():
+        user = Profile.query.filter_by(username=current_user.username).first_or_404()
+        email = User.query.filter_by(username=current_user.username).first().email
+        return render_template('view_profile.html', user=user, email=email)
+    
+    # Delete Profile Route
+    @app.route('/profile/delete', methods=['GET','POST'])
+    @login_required
+    def delete_profile():
+        user = User.query.filter_by(username=current_user.username).first_or_404()
+        db.session.delete(user)
+        db.session.commit()
+        flash_message('Your profile has been deleted!', 'success')
+        return redirect(url_for('home'))
+    
     # Dashboard Route
     @app.route('/dashboard')
     @login_required
     def dashboard():
+        user = User.query.filter_by(username=current_user.username).first_or_404()
         if not current_user.confirmed:
             flash_message('Please confirm your account!', 'warning')
             return redirect(url_for('resend_confirmation'))
-        return "Dashboard"
+        return render_template('dashboard.html', user=user)
     
     # Logout Route
     @app.route('/logout')
