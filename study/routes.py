@@ -166,7 +166,12 @@ def register_routes(app):
         
         # Get groups the user is part of
         groups = Group.query.join(GroupMember).filter(GroupMember.user_id == user.username).all()
-        return render_template('dashboard.html', user=user, groups=groups)
+
+        #Get user profile
+        user_profile = Profile.query.filter_by(username=current_user.username).first()
+        strong_subjects = user_profile.strong_subjects.split(',') if user_profile and user_profile.strong_subjects else []
+        weak_subjects = user_profile.weak_subjects.split(',') if user_profile and user_profile.weak_subjects else []
+        return render_template('dashboard.html', user=user, groups=groups, user_profile=user_profile, strong_subjects=strong_subjects, weak_subjects=weak_subjects)
     
     # Logout Route
     @app.route('/logout')
