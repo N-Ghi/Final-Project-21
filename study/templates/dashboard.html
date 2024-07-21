@@ -3,10 +3,13 @@
 {%block content%}
     <h1>Dashboard</h1>
     <div>
-        <h3>Upcomming Sessions</h3>
+        <h3>Upcoming Sessions</h3>
+       <!--Display upcoming sessions, if none ask the user to create a new session-->
+       <!--Only users in a group can create a session-->
     </div>
     <div>
         <h3>Past Sessions</h3>
+        <!--Display past sessions-->
     </div>
     <div>
         <h3>Your Groups</h3>
@@ -40,6 +43,30 @@
     </div>
     
     <div>
-        <h3></h3>
+        <h3>Your Subjects</h3>
+        <div>
+            <h4>Strong Subject(s)</h4>
+            {% if strong_subjects %}
+                <ul>
+                    {% for subject in strong_subjects %}
+                        <li>{{ subject }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>You have not set up your strong subjects yet. Please update your profile.</p>
+            {% endif %}
+        </div>
+        <div>
+            <h4>Weak Subject(s)</h4>
+            {% if weak_subjects %}
+                <ul>
+                    {% for subject in weak_subjects %}
+                        <li>{{ subject }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>You have not set up your weak subjects yet. Please update your profile.</p>
+            {% endif %}
+        </div>
     </div>
 {%endblock%}
