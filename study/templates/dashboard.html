@@ -2,5 +2,44 @@
 {%block title%}Dashboard{%endblock%}
 {%block content%}
     <h1>Dashboard</h1>
-    <p>Welcome, {{ user.username }}!</p>
+    <div>
+        <h3>Upcomming Sessions</h3>
+    </div>
+    <div>
+        <h3>Past Sessions</h3>
+    </div>
+    <div>
+        <h3>Your Groups</h3>
+        {% if groups|length == 0 %}
+            <p>You are not part of any groups yet.</p>
+            <p>Create a group or join one</p>
+        {% else %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Subject</th>
+                        <th>Days</th>
+                        <th>Times</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for group in groups %}
+                    <tr>
+                        <td>{{ group.id }}</td>
+                        <td>{{ group.name }}</td>
+                        <td>{{ group.subject }}</td>
+                        <td>{{ group.days }}</td>
+                        <td>{{ group.times }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+    
+    <div>
+        <h3></h3>
+    </div>
 {%endblock%}

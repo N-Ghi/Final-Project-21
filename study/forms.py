@@ -39,3 +39,15 @@ class VerifyEmailForm(FlaskForm):
 class ResendConfirmationForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Resend Confirmation Email')
+
+class CreateGroupForm(FlaskForm):
+    name = StringField('Group Name', validators=[DataRequired(), Length(max=100)])
+    subject = SelectField('Select group subject', choices=[
+        ('C++', 'C++'), ('Python', 'Python'), ('JavaScript', 'JavaScript'), ('HTML', 'HTML'), ('CSS', 'CSS')], validators=[InputRequired(), max_length_check])
+    creator = StringField('Creator', validators=[DataRequired()])
+    days = SelectMultipleField('Select your days availability', choices=[
+        ('Monday', 'Monday'), ('Tuesday', 'Tuesday'), ('Wednesday', 'Wednesday'),
+        ('Thursday', 'Thursday'), ('Friday', 'Friday'), ('Saturday', 'Saturday'), ('Sunday', 'Sunday')], validators=[InputRequired()])
+    times = SelectMultipleField('Select your time availability', choices=[
+        ('Morning', 'Morning'), ('Afternoon', 'Afternoon'), ('Evening', 'Evening')], validators=[InputRequired()])
+    submit = SubmitField('Create Group')
