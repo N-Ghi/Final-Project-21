@@ -163,7 +163,10 @@ def register_routes(app):
         if not current_user.confirmed:
             flash_message('Please confirm your account!', 'warning')
             return redirect(url_for('resend_confirmation'))
-        return render_template('dashboard.html', user=user)
+        
+        # Get groups the user is part of
+        groups = Group.query.join(GroupMember).filter(GroupMember.user_id == user.username).all()
+        return render_template('dashboard.html', user=user, groups=groups)
     
     # Logout Route
     @app.route('/logout')
@@ -172,3 +175,87 @@ def register_routes(app):
         logout_user()
         flash_message('Logged out successfully!', 'success')
         return redirect(url_for('home'))
+    
+    #See gruops
+    @app.route('/group')
+    @login_required
+    def group():
+        all_groups = Group.query.all()
+        user_groups = Group.query.join(GroupMember).filter(GroupMember.user_id == current_user.username).all()
+        return render_template('group.html', all_groups=all_groups, user_groups=user_groups)
+    
+    # Create Group Route
+    @app.route('/group/new', methods=['GET', 'POST'])
+    @login_required
+    def create_group():
+        form = CreateGroupForm()
+        if form.validate_on_submit():
+            new_group = Group(
+                name=form.name.data,
+                subject=form.subject.data,
+                creator=current_user.username,
+                days=",".join(form.days.data),
+                times=",".join(form.times.data)
+            )
+            db.session.add(new_group)
+            db.session.commit()
+
+            # Add the creator as a member
+            new_member = GroupMember(
+                group_id=new_group.id,
+                user_id=current_user.username
+            )
+            db.session.add(new_member)
+            db.session.commit()
+            flash_message('Group created successfully! You have been added as a member', 'success')
+            return redirect(url_for('dashboard'))
+        return render_template('create_group.html', form=form)
+    
+    # Join Group Route
+    @app.route('/join_group/<int:group_id>')
+    @login_required
+    def join_group(group_id):
+        # Handle joining the group
+        group = Group.query.get_or_404(group_id)
+        if group and len(group.members) < 10:
+            # Add user to the group
+            new_member = GroupMember(group_id=group.id, user_id=current_user.username)
+            db.session.add(new_member)
+            db.session.commit()
+            flash_message('You have successfully joined the group!', 'success')
+        else:
+            flash_message('Group is full or does not exist.', 'danger')
+        return redirect(url_for('group'))
+    
+    # Delete Group Route
+    @app.route('/group/delete/<int:group_id>', methods=['GET','POST'])
+    @login_required
+    def delete_group(group_id):
+        group = Group.query.get_or_404(group_id)
+        if group.creator != current_user.username:
+            flash_message('You are not authorized to delete this group.', 'danger')
+            return redirect(url_for('group'))
+        
+        # Remove all members of the group
+        GroupMember.query.filter_by(group_id=group_id).delete()
+        db.session.delete(group)
+        db.session.commit()
+        flash_message('Group deleted successfully!', 'success')
+        return redirect(url_for('group'))
+    
+    # Leave Group Route
+    @app.route('/group/leave/<int:group_id>', methods=['GET','POST'])
+    @login_required
+    def leave_group(group_id):
+        group = Group.query.get_or_404(group_id)
+        
+        # Check if the user is a member of the group
+        membership = GroupMember.query.filter_by(group_id=group_id, user_id=current_user.username).first()
+        if membership:
+            db.session.delete(membership)
+            db.session.commit()
+            flash_message('You have left the group.', 'success')
+        else:
+            flash_message('You are not a member of this group.', 'danger')
+
+        return redirect(url_for('group'))

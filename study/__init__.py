@@ -9,10 +9,7 @@ import os
 
 # Load environment variables from .env file
 load_dotenv()
-
-# Debugging print statement
 secret_key = os.getenv('SECRET_KEY')
-print(f"SECRET_KEY (inside __init__.py): {secret_key}")
 
 # Initialize Flask extensions
 db = SQLAlchemy()
