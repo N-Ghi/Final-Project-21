@@ -5,6 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% block head %}{% endblock %}
     <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        header {
+            background-color: #0c2340;
+            color: white;
+            padding: 10px 0;
+        }
+        .top-header {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .top-header .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        main {
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .alert-container {
+            margin: 20px 0;
+        }
+        .alert {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .alert-info {
+            background-color: #d9edf7;
+            color: #31708f;
+        }
+        .alert-success {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+        .alert-warning {
+            background-color: #fcf8e3;
+            color: #8a6d3b;
+        }
+        .alert-danger {
+            background-color: #f2dede;
+            color: #a94442;
+        }
         .flash-message {
             position: fixed;
             top: 0;
@@ -20,13 +75,22 @@
         .flash-message.hide {
             opacity: 0;
         }
+        footer {
+            background-color: #0c2340;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        footer p {
+            margin: 0;
+        }
     </style>
 </head>
 <body>
     <header>
-        <div class="container">
-            <div class="top-header ">
-            </div>
+        <div class="top-header">
+            <div class="logo">Buddy Study Finder</div>
+            <!-- Add other header content or navigation links here -->
         </div>
     </header>
     <main>
@@ -43,8 +107,8 @@
               {% endif %}
             {% endwith %}
             {% block content %}{% endblock %}
-          </div>
-          <script>
+        </div>
+        <script>
             document.addEventListener('DOMContentLoaded', function() {
                 setTimeout(function() {
                     var flashMessages = document.querySelectorAll('.flash-message');
@@ -57,10 +121,9 @@
     </main>
     <footer>
         <div class="container">
-            <div class="footer-content">
-                <p>&copy; 2024 Buddy Study Finder</p>
-            </div>
+            <p>&copy; 2024 Buddy Study Finder</p>
         </div>
+    </footer>
 </body>
-
 </html>
+
