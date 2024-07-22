@@ -1,83 +1,185 @@
 {% extends 'navbar.html' %}
 {% block title %}Groups{% endblock %}
 {% block content %}
-    <h1>Groups</h1>
+<div class="dashboard-container">
+    <nav class="sidebar">
+        <div class="logo">ALU</div>
+        <ul>
+            <li><a href="http://127.0.0.1:5000/dashboard" class="active"><i class="fas fa-home"></i>Home</a></li>
+            <li><a href="http://127.0.0.1:5000/profile/view"><i class="fas fa-user"></i>Profile</a></li>
+            <li><a href="http://127.0.0.1:5000/home"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
+            <li><a href="http://127.0.0.1:5000/group"><i class="fas fa-users"></i>Group</a></li>
+        </ul>
+    </nav>
     
-    {% if all_groups|length == 0 %}
-        <p>No groups exist yet.</p>
-        <a href="{{ url_for('create_group') }}">Create a Group</a>
-    {% else %}
-        <h3>Available Groups</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Subject</th>
-                    <th>Days</th>
-                    <th>Times</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for group in all_groups %}
+    <main class="content">
+        <header>
+            <h1>Groups</h1>
+        </header>
+        
+        {% if all_groups|length == 0 %}
+            <p>No groups exist yet.</p>
+            <a href="{{ url_for('create_group') }}" class="create-group-btn">Create a Group</a>
+        {% else %}
+            <h3>Available Groups</h3>
+            <table class="group-table">
+                <thead>
                     <tr>
-                        <td>{{ group.id }}</td>
-                        <td>{{ group.name }}</td>
-                        <td>{{ group.subject }}</td>
-                        <td>{{ group.days }}</td>
-                        <td>{{ group.times }}</td>
-                        <td>
-                            {% if group.members|length < 10 %}
-                                <a href="{{ url_for('join_group', group_id=group.id) }}">Join Group</a>
-                            {% else %}
-                                <span>Full</span>
-                            {% endif %}
-                        </td>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Subject</th>
+                        <th>Days</th>
+                        <th>Times</th>
+                        <th>Action</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
+                </thead>
+                <tbody>
+                    {% for group in all_groups %}
+                        <tr>
+                            <td>{{ group.id }}</td>
+                            <td>{{ group.name }}</td>
+                            <td>{{ group.subject }}</td>
+                            <td>{{ group.days }}</td>
+                            <td>{{ group.times }}</td>
+                            <td>
+                                {% if group.members|length < 10 %}
+                                    <a href="{{ url_for('join_group', group_id=group.id) }}" class="action-btn">Join Group</a>
+                                {% else %}
+                                    <span class="full">Full</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
 
-    <h3>Your Groups</h3>
-    {% if user_groups|length == 0 %}
-        <p>You are not a member of any groups yet.</p>
-    {% else %}
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Subject</th>
-                    <th>Days</th>
-                    <th>Times</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for group in user_groups %}
+        <h3>Your Groups</h3>
+        {% if user_groups|length == 0 %}
+            <p>You are not a member of any groups yet.</p>
+        {% else %}
+            <table class="group-table">
+                <thead>
                     <tr>
-                        <td>{{ group.id }}</td>
-                        <td>{{ group.name }}</td>
-                        <td>{{ group.subject }}</td>
-                        <td>{{ group.days }}</td>
-                        <td>{{ group.times }}</td>
-                        <td>
-                            {% if group.creator == current_user.username %}
-                                <a href="{{ url_for('delete_group', group_id=group.id) }}">Delete Group</a>
-                                <a href="{{ url_for('leave_group', group_id=group.id) }}">Leave Group</a>
-                            {% else %}
-                                <a href="{{ url_for('leave_group', group_id=group.id) }}">Leave Group</a>
-                            {% endif %}
-                        </td>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Subject</th>
+                        <th>Days</th>
+                        <th>Times</th>
+                        <th>Action</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
-    <h3>Create a Group</h3>
-    <div>
-        <a href="{{url_for('create_group')}}">Create a new Group</a>
-    </div>
+                </thead>
+                <tbody>
+                    {% for group in user_groups %}
+                        <tr>
+                            <td>{{ group.id }}</td>
+                            <td>{{ group.name }}</td>
+                            <td>{{ group.subject }}</td>
+                            <td>{{ group.days }}</td>
+                            <td>{{ group.times }}</td>
+                            <td>
+                                {% if group.creator == current_user.username %}
+                                    <a href="{{ url_for('delete_group', group_id=group.id) }}" class="action-btn">Delete Group</a>
+                                    <a href="{{ url_for('leave_group', group_id=group.id) }}" class="action-btn">Leave Group</a>
+                                {% else %}
+                                    <a href="{{ url_for('leave_group', group_id=group.id) }}" class="action-btn">Leave Group</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+        <h3>Create a Group</h3>
+        <div>
+            <a href="{{url_for('create_group')}}" class="create-group-btn">Create a new Group</a>
+        </div>
+    </main>
+</div>
+
+<style>
+    .dashboard-container {
+        display: flex;
+    }
+    .sidebar {
+        width: 200px;
+        background-color: #0c2340;
+        color: white;
+        height: 100vh;
+        padding: 20px;
+    }
+    .logo {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+    .sidebar ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    .sidebar li {
+        margin-bottom: 15px;
+    }
+    .sidebar a {
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border-radius: 4px;
+    }
+    .sidebar a.active {
+        background-color: #3d6b9d;
+    }
+    .sidebar a i {
+        margin-right: 10px;
+    }
+    .content {
+        flex-grow: 1;
+        padding: 20px;
+    }
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .group-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    .group-table th, .group-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+    }
+    .group-table th {
+        background-color: #f4f4f4;
+    }
+    .action-btn {
+        color: #0693e3;
+        text-decoration: none;
+    }
+    .action-btn:hover {
+        text-decoration: underline;
+    }
+    .full {
+        color: #d9534f;
+    }
+    .create-group-btn {
+        display: inline-block;
+        color: #0693e3;
+        text-decoration: none;
+        border: 1px solid #0693e3;
+        padding: 10px 15px;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+    .create-group-btn:hover {
+        background-color: #0693e3;
+        color: white;
+    }
+</style>
 {% endblock %}
+
