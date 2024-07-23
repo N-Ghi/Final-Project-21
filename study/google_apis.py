@@ -82,11 +82,11 @@ def create_calendar_event(summary, location, description, start_datetime, end_da
         'description': description,
         'start': {
             'dateTime': start_datetime,
-            'timeZone': 'America/Los_Angeles',
+            'timeZone': 'Harare/Africa',
         },
         'end': {
             'dateTime': end_datetime,
-            'timeZone': 'America/Los_Angeles',
+            'timeZone': 'Harare/Africa',
         },
         'attendees': [{'email': email} for email in attendees_emails],
         'conferenceData': {
@@ -117,18 +117,3 @@ def create_calendar_event(summary, location, description, start_datetime, end_da
     except Exception as error:
         print(f'An error occurred: {error}')
         return None
-
-# Example usage
-if __name__ == '__main__':
-    # Send an email
-    send_email('nagasaroghislaine3@gmail.com', 'Test Subject', '<h1>Test HTML Content</h1>')
-
-    # Create a calendar event with Google Meet link
-    create_calendar_event(
-        summary='Google Meet Event',
-        location='Online',
-        description='A chance to talk with friends.',
-        start_datetime='2024-07-30T09:00:00-07:00',
-        end_datetime='2024-07-30T10:00:00-07:00',
-        attendees_emails=['attendee1@example.com', 'attendee2@example.com']
-    )
