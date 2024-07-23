@@ -59,6 +59,7 @@
                         <th>Days</th>
                         <th>Times</th>
                         <th>Action</th>
+                        <th>Creator</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -70,13 +71,9 @@
                             <td>{{ group.days }}</td>
                             <td>{{ group.times }}</td>
                             <td>
-                                {% if group.creator == current_user.username %}
-                                    <a href="{{ url_for('delete_group', group_id=group.id) }}" class="action-btn">Delete Group</a>
-                                    <a href="{{ url_for('leave_group', group_id=group.id) }}" class="action-btn">Leave Group</a>
-                                {% else %}
-                                    <a href="{{ url_for('leave_group', group_id=group.id) }}" class="action-btn">Leave Group</a>
-                                {% endif %}
+                              <a href="{{url_for('view_group', group_id=group.id)}}">View Group</a>
                             </td>
+                            <td>{{ group.creator}}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -222,6 +222,12 @@ def register_routes(app):
     def join_group(group_id):
         # Handle joining the group
         group = Group.query.get_or_404(group_id)
+
+        # Check if the user is already a member of the group
+        membership = GroupMember.query.filter_by(group_id=group_id, user_id=current_user.username).first()
+        if membership:
+            flash_message('You are already a member of this group.', 'danger')
+            return redirect(url_for('group'))
         if group and len(group.members) < 10:
             # Add user to the group
             new_member = GroupMember(group_id=group.id, user_id=current_user.username)
@@ -237,10 +243,8 @@ def register_routes(app):
     @login_required
     def delete_group(group_id):
         group = Group.query.get_or_404(group_id)
-        if group.creator != current_user.username:
-            flash_message('You are not authorized to delete this group.', 'danger')
-            return redirect(url_for('group'))
         
+
         # Remove all members of the group
         GroupMember.query.filter_by(group_id=group_id).delete()
         db.session.delete(group)
@@ -264,3 +268,14 @@ def register_routes(app):
             flash_message('You are not a member of this group.', 'danger')
 
         return redirect(url_for('group'))
+    
+    # View Group Details Route
+    @app.route('/group/view/<int:group_id>', methods=['GET','POST'])
+    @login_required
+    def view_group(group_id):
+        group = Group.query.get_or_404(group_id)
+        members = GroupMember.query.filter_by(group_id=group_id).all()
+        
+       
+        return render_template('group_details.html', group=group, members=members)
+        

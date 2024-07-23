@@ -61,7 +61,7 @@ class ResendConfirmationForm(FlaskForm):
 class CreateGroupForm(FlaskForm):
     name = StringField('Group Name', validators=[DataRequired(), Length(max=100)])
     subject = SelectField('Select group subject', choices=subjects, validators=[InputRequired()])
-    creator = StringField('Creator', validators=[DataRequired()])
+    
     days = SelectMultipleField('Select your days availability', choices=days_of_week, validators=[InputRequired()])
     times = SelectMultipleField('Select your time availability', choices=time_slots, validators=[InputRequired()])
     submit = SubmitField('Create Group')
