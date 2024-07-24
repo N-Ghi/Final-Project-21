@@ -3,6 +3,7 @@ from study.forms import *
 from study.db_models import *
 from flask_login import login_required, current_user, login_user, logout_user
 from study import *
+from study.google_apis import *
 
 def flash_message(message, category):
     flash(message, category)
@@ -274,8 +275,43 @@ def register_routes(app):
     @login_required
     def view_group(group_id):
         group = Group.query.get_or_404(group_id)
-        members = GroupMember.query.filter_by(group_id=group_id).all()
-        
+        members = GroupMember.query.filter_by(group_id=group_id).all() 
        
         return render_template('group_details.html', group=group, members=members)
         
+    # Schedule Route
+    @app.route('/event/create', methods=['GET', 'POST'])
+    @login_required
+    def schedule():
+
+        form = ScheduleForm()
+        if form.validate_on_submit():
+            summary = form.summary.data
+            location = form.location.data
+            description = form.description.data
+            start_datetime = form.start_datetime.data
+            end_datetime = form.end_datetime.data
+            group_id = form.group_id.data
+
+            # Retrieve group details from the database
+            group = Group.query.get(group_id)
+            if not group:
+                return 'Group not found', 404
+            
+            # Get all group members
+            members = GroupMember.query.filter_by(group_id=group_id).all()
+            attendees_emails = [member.user.email for member in members]
+            
+            # Create calendar event
+            event, meet_link = create_calendar_event(summary, location, description, start_datetime, end_datetime, attendees_emails, group_id)
+            
+            if event:
+                # Send email notifications
+                subject = f"New Event Created: {summary}"
+                body = f"An event has been created: <a href='{event.get('htmlLink')}'>View Event</a><br>Google Meet Link: <a href='{meet_link}'>Join Meeting</a>"
+                send_email_notification(attendees_emails, subject, body)
+                
+                return redirect(url_for('schedule'))
+            else:
+                return 'An error occurred while creating the event.', 500
+        return render_template('schedule.html', form=form)

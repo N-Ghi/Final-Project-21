@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
-# If modifying these SCOPES, delete the file token.json.
+# Define Google API scopes
 GMAIL_SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 CALENDAR_SCOPES = ['https://www.googleapis.com/auth/calendar']
 ALL_SCOPES = GMAIL_SCOPES + CALENDAR_SCOPES
@@ -73,7 +73,7 @@ def send_email(user_email, subject, html_content):
         print(f'An error occurred: {error}')
         return None
 
-def create_calendar_event(summary, location, description, start_datetime, end_datetime, attendees_emails):
+def create_calendar_event(summary, location, description, start_datetime, end_datetime, attendees_emails, group_id):
     service = get_calendar_service()
     
     event = {
@@ -82,11 +82,11 @@ def create_calendar_event(summary, location, description, start_datetime, end_da
         'description': description,
         'start': {
             'dateTime': start_datetime,
-            'timeZone': 'Harare/Africa',
+            'timeZone': 'Africa/Harare',
         },
         'end': {
             'dateTime': end_datetime,
-            'timeZone': 'Harare/Africa',
+            'timeZone': 'Africa/Harare',
         },
         'attendees': [{'email': email} for email in attendees_emails],
         'conferenceData': {
@@ -107,13 +107,29 @@ def create_calendar_event(summary, location, description, start_datetime, end_da
                 {'method': 'popup', 'minutes': 10},
             ],
         },
+         'extendedProperties': {
+            'private': {
+                'groupId': group_id
+            }
+        }
+
     }
     
     try:
         event = service.events().insert(calendarId='primary', body=event, conferenceDataVersion=1).execute()
         print('Event created: %s' % (event.get('htmlLink')))
-        print('Meet Link: %s' % (event['conferenceData']['entryPoints'][0]['uri']))
-        return event
+        meet_link = event['conferenceData']['entryPoints'][0]['uri']
+        return event, meet_link
     except Exception as error:
         print(f'An error occurred: {error}')
-        return None
+        return None, None
+
+def send_email_notification(attendees_emails, event_link, meet_link, summary):
+    subject = f"New Event Created: {summary}"
+    body = (
+        f"An event has been created: <a href='{event_link}'>View Event</a><br>"
+        f"Google Meet Link: <a href='{meet_link}'>Join Meeting</a>"
+    )
+    
+    for email in attendees_emails:
+        send_email(email, subject, body)

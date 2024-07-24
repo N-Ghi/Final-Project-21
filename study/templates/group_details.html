@@ -26,6 +26,7 @@
         <h3>Actions</h3>
         {% if group.creator == current_user.username %}
             <a href="{{ url_for('delete_group', group_id=group.id) }}" class="action-btn">Delete Group</a>
+            <a href="{{url_for('schedule')}}">Create a Schedule</a>
         {% else %}
             <a href="{{ url_for('leave_group', group_id=group.id) }}" class="action-btn">Leave Group</a>
         {% endif %}

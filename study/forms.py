@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SelectField, SelectMultipleField, SubmitField
+from wtforms import StringField, PasswordField, SelectField, SelectMultipleField, SubmitField, IntegerField
 from wtforms.validators import DataRequired, Email, Length, InputRequired, ValidationError
 
 def max_length_check(form, field):
@@ -65,3 +65,13 @@ class CreateGroupForm(FlaskForm):
     days = SelectMultipleField('Select your days availability', choices=days_of_week, validators=[InputRequired()])
     times = SelectMultipleField('Select your time availability', choices=time_slots, validators=[InputRequired()])
     submit = SubmitField('Create Group')
+
+class ScheduleForm(FlaskForm):
+    summary = StringField('Summary', validators=[DataRequired(), Length(max=100)])
+    location = StringField('Location', validators=[DataRequired(), Length(max=100)])
+    description = StringField('Description', validators=[DataRequired(), Length(max=255)])
+    start_datetime = StringField('Start Date and Time', validators=[DataRequired()])
+    end_datetime = StringField('End Date and Time', validators=[DataRequired()])
+    attendees_emails = StringField('Attendees Emails', validators=[DataRequired()])
+    group_id = IntegerField('Group ID', validators=[DataRequired()])
+    submit = SubmitField('Schedule Event')
