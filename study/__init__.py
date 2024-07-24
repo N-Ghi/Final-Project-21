@@ -49,7 +49,7 @@ def confirm_token(token, expiration=3600):
         return False
     return email
 
-from study.send_email import send_email  # Import the new send_email function
+from study.google_apis import send_email  # Import the new send_email function
 
 def send_confirmation_email(user_email):
     token = generate_confirmation_token(user_email)

@@ -1,0 +1,52 @@
+{% extends 'navbar.html' %}
+{% block title %}Create Schedule{% endblock %}
+{% block content %}
+<div class="dashboard-container">
+    <main class="content">
+        <header>
+            <h1>Create Schedule</h1>
+            <div class="header-actions">
+                <!-- Add any header actions here -->
+            </div>
+        </header>
+        <div class="form-container">
+            <h2>Schedule an Event</h2>
+            <form action="{{ url_for('schedule') }}" method="POST">
+                {{ form.hidden_tag() }}
+               
+                <div class="form-group">
+                    {{ form.summary.label }}
+                    {{ form.summary(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.location.label }}
+                    {{ form.location(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.description.label }}
+                    {{ form.description(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.start_datetime.label }}
+                    {{ form.start_datetime(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.end_datetime.label }}
+                    {{ form.end_datetime(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.attendees_emails.label }}
+                    {{ form.attendees_emails(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.group_id.label }}
+                    {{ form.group_id(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+{% endblock %}
