@@ -3,6 +3,7 @@ from study.forms import *
 from study.db_models import *
 from flask_login import login_required, current_user, login_user, logout_user
 from study import *
+from sqlalchemy import or_, and_
 
 def flash_message(message, category):
     flash(message, category)
@@ -182,10 +183,24 @@ def register_routes(app):
         return redirect(url_for('home'))
     
     #See gruops
-    @app.route('/group')
+    @app.route('/group',methods=['GET'])
     @login_required
     def group():
-        all_groups = Group.query.all()
+        search = request.args.get('subject')
+        day = request.args.get('day')
+        time = request.args.get('time')
+        filters = []
+        query = Group.query
+        if search:
+            filters.append(or_(Group.subject.ilike(f'%{search}%'), Group.name.ilike(f'%{search}%')))
+        if day:
+            filters.append(Group.days.ilike(f'%{day}%'))
+        if time:
+            filters.append(Group.times.ilike(f'%{time}%'))
+        if filters:
+            query = query.filter(and_(*filters))
+
+        all_groups = query.all()
         user_groups = Group.query.join(GroupMember).filter(GroupMember.user_id == current_user.username).all()
         return render_template('group.html', all_groups=all_groups, user_groups=user_groups)
     
@@ -264,3 +279,4 @@ def register_routes(app):
             flash_message('You are not a member of this group.', 'danger')
 
         return redirect(url_for('group'))
+    
