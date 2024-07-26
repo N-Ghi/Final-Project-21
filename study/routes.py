@@ -279,7 +279,7 @@ def register_routes(app):
        
         return render_template('group_details.html', group=group, members=members)
         
-    # Schedule Route
+    # Create Schedule Route
     @app.route('/event/create', methods=['GET', 'POST'])
     @login_required
     def schedule():
@@ -303,6 +303,7 @@ def register_routes(app):
             attendees_emails = [member.user.email for member in members]
             
             # Create calendar event
+        
             event, meet_link = create_calendar_event(summary, location, description, start_datetime, end_datetime, attendees_emails, group_id)
             
             if event:
@@ -311,7 +312,7 @@ def register_routes(app):
                 body = f"An event has been created: <a href='{event.get('htmlLink')}'>View Event</a><br>Google Meet Link: <a href='{meet_link}'>Join Meeting</a>"
                 send_email_notification(attendees_emails, subject, body)
                 
-                return redirect(url_for('schedule'))
+                return redirect(url_for('group'))
             else:
                 return 'An error occurred while creating the event.', 500
         return render_template('schedule.html', form=form)
