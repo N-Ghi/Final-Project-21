@@ -72,6 +72,5 @@ class ScheduleForm(FlaskForm):
     description = StringField('Description', validators=[DataRequired(), Length(max=255)])
     start_datetime = StringField('Start Date and Time', validators=[DataRequired()])
     end_datetime = StringField('End Date and Time', validators=[DataRequired()])
-    attendees_emails = StringField('Attendees Emails', validators=[DataRequired()])
     group_id = IntegerField('Group ID', validators=[DataRequired()])
     submit = SubmitField('Schedule Event')
