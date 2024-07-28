@@ -1,3 +1,4 @@
+from datetime import *
 import os
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -7,6 +8,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import base64
 from dotenv import load_dotenv
+from googleapiclient.errors import HttpError
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -34,7 +37,7 @@ def get_credentials():
             print("Credentials expired, refreshing...")
         else:
             flow = InstalledAppFlow.from_client_secrets_file(credentials_path, ALL_SCOPES)
-            creds = flow.run_local_server(port=0)
+            creds = flow.run_local_server(port=51912)
             print("OAuth flow completed, credentials obtained.")
         with open(creds_path, 'w') as token:
             token.write(creds.to_json())
@@ -76,6 +79,19 @@ def send_email(user_email, subject, html_content):
 def create_calendar_event(summary, location, description, start_datetime, end_datetime, attendees_emails, group_id):
     service = get_calendar_service()
     
+    api_key = os.getenv('API_KEY') # Get the API key from the config
+
+    # Check if start_datetime and end_datetime are strings and convert them to the correct format
+    if isinstance(start_datetime, str):
+        start_datetime = datetime.strptime(start_datetime, '%d-%m-%Y %H:%M').isoformat()
+    else:
+        start_datetime = start_datetime.isoformat()
+    
+    if isinstance(end_datetime, str):
+        end_datetime = datetime.strptime(end_datetime, '%d-%m-%Y %H:%M').isoformat()
+    else:
+        end_datetime = end_datetime.isoformat()
+    
     event = {
         'summary': summary,
         'location': location,
@@ -91,7 +107,7 @@ def create_calendar_event(summary, location, description, start_datetime, end_da
         'attendees': [{'email': email} for email in attendees_emails],
         'conferenceData': {
             'createRequest': {
-                'requestId': 'random-string',
+                'requestId': 'random-string',  # Ideally, this should be a unique string for each request
                 'conferenceSolutionKey': {
                     'type': 'hangoutsMeet'
                 },
@@ -107,20 +123,19 @@ def create_calendar_event(summary, location, description, start_datetime, end_da
                 {'method': 'popup', 'minutes': 10},
             ],
         },
-         'extendedProperties': {
+        'extendedProperties': {
             'private': {
                 'groupId': group_id
             }
         }
-
     }
     
     try:
-        event = service.events().insert(calendarId='primary', body=event, conferenceDataVersion=1).execute()
+        event = service.events().insert(calendarId='primary', body=event, conferenceDataVersion=1, key=api_key).execute()
         print('Event created: %s' % (event.get('htmlLink')))
         meet_link = event['conferenceData']['entryPoints'][0]['uri']
         return event, meet_link
-    except Exception as error:
+    except HttpError as error:
         print(f'An error occurred: {error}')
         return None, None
 
