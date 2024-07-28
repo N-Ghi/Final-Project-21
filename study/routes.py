@@ -30,7 +30,7 @@ def register_routes(app):
                 flash_message('Username or email already exists. Please choose a different one.', 'danger')
                 return render_template('register.html', form=form)
 
-            new_user = User(username=username, email=email, password=password, confirmed=True)
+            new_user = User(username=username, email=email, password=password, confirmed=False)
             db.session.add(new_user)
             db.session.commit()
             send_confirmation_email(new_user.email)
