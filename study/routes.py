@@ -286,16 +286,19 @@ def register_routes(app):
             flash_message('You are not a member of this group.', 'danger')
 
         return redirect(url_for('group'))
+   
     # View Group Details Route
     @app.route('/group/view/<int:group_id>', methods=['GET','POST'])
     @login_required
     def view_group(group_id):
         group = Group.query.get_or_404(group_id)
-        members = GroupMember.query.filter_by(group_id=group_id).all() 
+        members = GroupMember.query.filter_by(group_id=group_id).all()
+
+        all_members = [member.user.username for member in members] 
        
-        return render_template('group_details.html', group=group, members=members)
+        return render_template('group_details.html', group=group, all_members=all_members)
   
-    # add review
+    # Add Review
     @app.route('/review/add',methods=['GET','POST'])
     @login_required
     def add_review():
@@ -320,6 +323,7 @@ def register_routes(app):
                     flash_message('User not found', 'danger')
         return render_template('add_review.html', form=form)
     
+    # View Reviews
     @app.route('/review/view',methods=['GET','POST'])
     @login_required
     def reviews():  

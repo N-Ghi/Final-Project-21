@@ -12,7 +12,26 @@ subjects = [
     ('Python', 'Python'), 
     ('JavaScript', 'JavaScript'), 
     ('HTML', 'HTML'), 
-    ('CSS', 'CSS')
+    ('CSS', 'CSS'),
+    ('React', 'React'),
+    ('Angular', 'Angular'),
+    ('Django', 'Django'),
+    ('Flask', 'Flask'),
+    ('Express', 'Express'),
+    ('Node.js', 'Node.js'),
+    ('MongoDB', 'MongoDB'),
+    ('SQL', 'SQL'),
+    ('PostgreSQL', 'PostgreSQL'),
+    ('MySQL', 'MySQL'),
+    ('Java', 'Java'),
+    ('C#', 'C#'),
+    ('Ruby', 'Ruby'),
+    ('PHP', 'PHP'),
+    ('Swift', 'Swift'),
+    ('Kotlin', 'Kotlin'),
+    ('Networking', 'Networking'),
+    ('Docker', 'Docker'),
+    ('Git', 'Git')
 ]
 
 days_of_week = [
