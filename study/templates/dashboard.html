@@ -15,18 +15,29 @@
         <section id="upcoming-sessions" class="section">
             <h3>Upcoming Sessions</h3>
             {% if upcoming_sessions %}
-                <ul>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Summary</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Group ID</th>
+                        <th>Description</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
                     {% for session in upcoming_sessions %}
-                        <li>
-                            <strong>{{ session.summary }}</strong><br>
-                            <span>{{ session.start_datetime.strftime('%d-%m-%Y %H:%M') }} - {{ session.end_datetime.strftime('%d-%m-%Y %H:%M') }}</span><br>
-                            <span>Location: {{ session.location }}</span><br>
-                            <span>Group ID: {{ session.group_id }}</span><br>
-                            <span>Description: {{ session.description }}</span><br>
-                            <a href="{{ session.meet_link }}" target="_blank">Join Meeting</a>
-                        </li>
+                        <tr>
+                            <td>{{ session.summary }}</td>
+                            <td>{{ session.start_datetime.strftime('%d-%m-%Y %H:%M') }}</td>
+                            <td>{{ session.end_datetime.strftime('%d-%m-%Y %H:%M') }}</td>
+                            <td>{{ session.group_id }}</td>
+                            <td>{{ session.description }}</td>
+                            <td><a href="{{ session.meet_link }}" target="_blank">Join Meeting</a></td>
+                        </tr>
                     {% endfor %}
-                </ul>
+            </table>
             {% else %}
                 <p>No upcoming sessions.</p>
             {% endif %}
@@ -34,17 +45,25 @@
         <section id="past-sessions" class="section">
             <h3>Past Sessions</h3>
             {% if past_sessions %}
-            <ul>
-                {% for session in past_sessions %}
-                    <li>
-                        <strong>{{ session.summary }}</strong><br>
-                        <span>{{ session.start_datetime.strftime('%d-%m-%Y %H:%M') }} - {{ session.end_datetime.strftime('%d-%m-%Y %H:%M') }}</span><br>
-                        <span>Location: {{ session.location }}</span><br>
-                        <span>Group ID: {{ session.group_id }}</span><br>
-                        <span>Description: {{ session.description }}</span>
-                    </li>
-                {% endfor %}
-            </ul>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Summary</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Group ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for session in past_sessions %}
+                        <tr>
+                            <td>{{ session.summary }}</td>
+                            <td>{{ session.start_datetime.strftime('%d-%m-%Y %H:%M') }}</td>
+                            <td>{{ session.end_datetime.strftime('%d-%m-%Y %H:%M') }}</td>
+                            <td>{{ session.group_id }}</td>
+                        </tr>
+                    {% endfor %}
+            </table>
         {% else %}
             <p>No past sessions.</p>
         {% endif %}
