@@ -68,3 +68,8 @@ class ScheduleForm(FlaskForm):
     attendees_emails = StringField('Attendees Emails', validators=[DataRequired()])
     group_id = IntegerField('Group ID', validators=[DataRequired()])
     submit = SubmitField('Schedule Event')
+class ReviewForm(FlaskForm):
+    message = StringField('Message', validators=[DataRequired(), Length(max=1024)])
+    to =  StringField('User', validators=[DataRequired(), Length(max=50)])
+    rating = StringField('Rating',validators=[DataRequired(),Length(max=5)])
+    submit = SubmitField('Rate')

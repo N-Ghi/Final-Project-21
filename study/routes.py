@@ -279,4 +279,37 @@ def register_routes(app):
             flash_message('You are not a member of this group.', 'danger')
 
         return redirect(url_for('group'))
+    # add review
+    @app.route('/review/add',methods=['GET','POST'])
+    @login_required
+    def add_review():
+        form = ReviewForm()
+        if form.validate_on_submit:
+            user = User.query.filter_by(email= form.to.data).first()
+            if user:
+                newReview = Review(
+                    message = form.message.data,
+                    userto = user.username,
+                    userfrom = current_user.username,
+                    rating= form.rating.data  
+                )
+                db.session.add(newReview)
+                db.session.commit()
+                flash_message('Review added successfully! Thanks for your contributions', 'success')
+                myReviews = Review.query.filter(Review.userto==current_user.username).all()
+                otherReviews = Review.query.filter(Review.userfrom==current_user.username).all()
+                return render_template('reviews.html', my_reviews=myReviews,other_reviews=otherReviews)
+            else:
+                if form.to.data is not None:
+                    flash_message('User not found', 'danger')
+        return render_template('add_review.html', form=form)
     
+    @app.route('/review/view',methods=['GET','POST'])
+    @login_required
+    def reviews():  
+       myReviews = Review.query.filter(Review.userto==current_user.username).all()
+       otherReviews = Review.query.filter(Review.userfrom==current_user.username).all()
+       return render_template('reviews.html', my_reviews=myReviews,other_reviews=otherReviews)
+    
+
+

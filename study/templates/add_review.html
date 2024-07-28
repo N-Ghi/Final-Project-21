@@ -1,0 +1,23 @@
+{%extends 'navbar.html'%}
+{%block title%}Create Group{%endblock%}
+{%block content%}
+<main>
+    <div class="container">
+        <h2>Create Group</h2>
+        <form method="POST" action="/review/add">
+            {{form.hidden_tag()}}
+
+            {{form.to.label}}
+            {{form.to()}}
+            <br>
+            {{form.message.label}}
+            {{form.message()}}
+            <br>
+            {{form.rating.label}}
+            {{form.rating()}}
+            <br>
+            {{form.submit()}}
+        </form>
+    </div>
+</main>
+{%endblock%}
