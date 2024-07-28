@@ -310,7 +310,7 @@ def register_routes(app):
                 # Send email notifications
                 subject = f"New Event Created: {summary}"
                 body = f"An event has been created: <a href='{event.get('htmlLink')}'>View Event</a><br>Google Meet Link: <a href='{meet_link}'>Join Meeting</a>"
-                send_email_notification(attendees_emails, subject, body)
+                send_email_notification(attendees_emails, subject, body, summary)
                 
                 return redirect(url_for('group'))
             else:

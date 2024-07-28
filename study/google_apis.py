@@ -1,3 +1,4 @@
+from datetime import *
 import os
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -7,7 +8,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import base64
 from dotenv import load_dotenv
-import study
+from googleapiclient.errors import HttpError
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -79,6 +81,10 @@ def create_calendar_event(summary, location, description, start_datetime, end_da
     
     api_key = os.getenv('API_KEY') # Get the API key from the config
     
+    # Convert input date and time strings to the correct format
+    start_datetime = datetime.strptime(start_datetime, '%d-%m-%Y %H:%M').isoformat()
+    end_datetime = datetime.strptime(end_datetime, '%d-%m-%Y %H:%M').isoformat()
+    
     event = {
         'summary': summary,
         'location': location,
@@ -94,7 +100,7 @@ def create_calendar_event(summary, location, description, start_datetime, end_da
         'attendees': [{'email': email} for email in attendees_emails],
         'conferenceData': {
             'createRequest': {
-                'requestId': 'random-string',
+                'requestId': 'random-string',  # Ideally, this should be a unique string for each request
                 'conferenceSolutionKey': {
                     'type': 'hangoutsMeet'
                 },
@@ -122,7 +128,7 @@ def create_calendar_event(summary, location, description, start_datetime, end_da
         print('Event created: %s' % (event.get('htmlLink')))
         meet_link = event['conferenceData']['entryPoints'][0]['uri']
         return event, meet_link
-    except Exception as error:
+    except HttpError as error:
         print(f'An error occurred: {error}')
         return None, None
 
