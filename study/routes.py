@@ -4,6 +4,7 @@ from study.db_models import *
 from flask_login import login_required, current_user, login_user, logout_user
 from study import *
 from sqlalchemy import or_, and_
+from study.google_apis import *
 
 def flash_message(message, category):
     flash(message, category)
@@ -29,7 +30,7 @@ def register_routes(app):
                 flash_message('Username or email already exists. Please choose a different one.', 'danger')
                 return render_template('register.html', form=form)
 
-            new_user = User(username=username, email=email, password=password, confirmed=False)
+            new_user = User(username=username, email=email, password=password, confirmed=True)
             db.session.add(new_user)
             db.session.commit()
             send_confirmation_email(new_user.email)
@@ -335,7 +336,6 @@ def register_routes(app):
         form = ScheduleForm()
         if form.validate_on_submit():
             summary = form.summary.data
-            location = form.location.data
             description = form.description.data
             start_datetime = form.start_datetime.data
             end_datetime = form.end_datetime.data
@@ -353,7 +353,7 @@ def register_routes(app):
             
             # Create calendar event
         
-            event, meet_link = create_calendar_event(summary, location, description, start_datetime, end_datetime, attendees_emails, group_id)
+            event, meet_link = create_calendar_event(summary, description, start_datetime, end_datetime, attendees_emails, group_id)
             
             if event:
                 # Send email notifications
@@ -364,7 +364,6 @@ def register_routes(app):
                 # Save event to the database
                 new_event = Event(
                     summary=summary,
-                    location=location,
                     description=description,
                     start_datetime=start_datetime,
                     end_datetime=end_datetime,

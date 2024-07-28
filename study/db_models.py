@@ -64,7 +64,6 @@ class Event(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     summary = db.Column(db.String(255), nullable=False)
-    location = db.Column(db.String(255))
     description = db.Column(db.Text)
     start_datetime = db.Column(db.DateTime, nullable=False)
     end_datetime = db.Column(db.DateTime, nullable=False)
@@ -72,9 +71,8 @@ class Event(db.Model):
     group_id = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    def __init__(self, summary, location, description, start_datetime, end_datetime, meet_link, group_id):
+    def __init__(self, summary,  description, start_datetime, end_datetime, meet_link, group_id):
         self.summary = summary
-        self.location = location
         self.description = description
         self.start_datetime = start_datetime
         self.end_datetime = end_datetime

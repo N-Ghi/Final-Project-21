@@ -76,7 +76,7 @@ def send_email(user_email, subject, html_content):
         print(f'An error occurred: {error}')
         return None
 
-def create_calendar_event(summary, location, description, start_datetime, end_datetime, attendees_emails, group_id):
+def create_calendar_event(summary, description, start_datetime, end_datetime, attendees_emails, group_id):
     service = get_calendar_service()
     
     api_key = os.getenv('API_KEY') # Get the API key from the config
@@ -94,7 +94,6 @@ def create_calendar_event(summary, location, description, start_datetime, end_da
     
     event = {
         'summary': summary,
-        'location': location,
         'description': description,
         'start': {
             'dateTime': start_datetime,
