@@ -80,10 +80,17 @@ def create_calendar_event(summary, location, description, start_datetime, end_da
     service = get_calendar_service()
     
     api_key = os.getenv('API_KEY') # Get the API key from the config
+
+    # Check if start_datetime and end_datetime are strings and convert them to the correct format
+    if isinstance(start_datetime, str):
+        start_datetime = datetime.strptime(start_datetime, '%d-%m-%Y %H:%M').isoformat()
+    else:
+        start_datetime = start_datetime.isoformat()
     
-    # Convert input date and time strings to the correct format
-    start_datetime = datetime.strptime(start_datetime, '%d-%m-%Y %H:%M').isoformat()
-    end_datetime = datetime.strptime(end_datetime, '%d-%m-%Y %H:%M').isoformat()
+    if isinstance(end_datetime, str):
+        end_datetime = datetime.strptime(end_datetime, '%d-%m-%Y %H:%M').isoformat()
+    else:
+        end_datetime = end_datetime.isoformat()
     
     event = {
         'summary': summary,

@@ -1,3 +1,4 @@
+from datetime import *
 from . import db
 from flask_login import UserMixin
 
@@ -48,3 +49,25 @@ class GroupMember(db.Model):
     
     group = db.relationship('Group', back_populates='members')
     user = db.relationship('User', back_populates='groups')
+
+class Event(db.Model):
+    __tablename__ = 'event'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    summary = db.Column(db.String(255), nullable=False)
+    location = db.Column(db.String(255))
+    description = db.Column(db.Text)
+    start_datetime = db.Column(db.DateTime, nullable=False)
+    end_datetime = db.Column(db.DateTime, nullable=False)
+    meet_link = db.Column(db.String(255))
+    group_id = db.Column(db.Integer, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __init__(self, summary, location, description, start_datetime, end_datetime, meet_link, group_id):
+        self.summary = summary
+        self.location = location
+        self.description = description
+        self.start_datetime = start_datetime
+        self.end_datetime = end_datetime
+        self.meet_link = meet_link
+        self.group_id = group_id
