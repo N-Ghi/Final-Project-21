@@ -293,10 +293,15 @@ def register_routes(app):
     def view_group(group_id):
         group = Group.query.get_or_404(group_id)
         members = GroupMember.query.filter_by(group_id=group_id).all()
+        all_members = [member.user_id for member in members] if members else []
+        sessions = Event.query.filter_by(group_id=group_id).all()
+        
+        form = DeleteEventForm()
+        if form.validate_on_submit():
 
-        all_members = [member.user.username for member in members] 
-       
-        return render_template('group_details.html', group=group, all_members=all_members)
+           event_id = form.event_id.data
+
+        return render_template('group_details.html', group=group, all_members=all_members, sessions=sessions, form=form, event_id=group_id)
   
     # Add Review
     @app.route('/review/add',methods=['GET','POST'])
@@ -381,3 +386,24 @@ def register_routes(app):
             else:
                 return 'An error occurred while creating the event.', 500
         return render_template('schedule.html', form=form)
+    
+    # Delete Event Route
+    @app.route('/event/delete/<int:event_id>', methods=['GET','POST'])
+    @login_required
+    def delete_event(event_id):
+        form = DeleteEventForm()
+        if form.validate_on_submit():
+
+           event_id = form.event_id.data
+
+           # Retrieve event details from the database
+           event = Event.query.get(event_id)
+           if not event:
+            flash_message('Event not found', 'danger')
+            return redirect(url_for('dashboard'))
+           Event.query.filter_by(id=event_id).delete()
+           db.session.delete(event)
+           db.session.commit()
+           flash_message('Event deleted successfully!', 'success')
+           return redirect(url_for('dashboard'))
+        return render_template('delete_event.html', form=form, event_id=event_id)

@@ -58,7 +58,6 @@ class Review(db.Model):
     userto = db.Column(db.String(50),nullable = False)
     userfrom = db.Column(db.String(50),nullable = False)    
 
-
 class Event(db.Model):
     __tablename__ = 'event'
 

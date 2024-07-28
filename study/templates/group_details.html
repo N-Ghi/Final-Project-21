@@ -18,15 +18,36 @@
         <h3>Members</h3>
         <ul>
             {% for member in all_members %}
-            <li>{{ member.username }}</li>
+            <li>{{ member }}</li>
             {% endfor %}
         </ul>
+    </div>
+    <div class="sessions">
+        <h3>Sessions</h3>
+        <p>Here are the upcoming sessions:</p>
+        {% if not sessions %}
+            <p>No upcoming sessions scheduled yet.</p>
+        {% else %}
+            <ul>
+                {% for session in sessions %}
+                <li><strong>{{ session.summary }}</strong><br></li>
+                <li>
+                    Meeting ID: {{ session.id }}
+                    <br>
+                    {{ session.start_datetime.strftime('%d-%m-%Y %H:%M') }} - {{ session.end_datetime.strftime('%d-%m-%Y %H:%M') }}
+                    <br>
+                    <a href="{{ session.meet_link }}" target="_blank">Join Meeting</a>
+                </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     </div>
     <div class="actions">
         <h3>Actions</h3>
         {% if group.creator == current_user.username %}
             <a href="{{ url_for('delete_group', group_id=group.id) }}" class="action-btn delete-btn">Delete Group</a>
             <a href="{{ url_for('schedule') }}" class="action-btn schedule-btn">Create a Schedule</a>
+            <a href="{{ url_for('delete_event', event_id=event_id) }} "class="action-btn delete-btn">Delete Event</a>
         {% else %}
             <a href="{{ url_for('leave_group', group_id=group.id) }}" class="action-btn leave-btn">Leave Group</a>
         {% endif %}

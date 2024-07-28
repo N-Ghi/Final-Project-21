@@ -85,6 +85,10 @@ class ScheduleForm(FlaskForm):
     end_datetime = DateTimeField('End Date and Time', format='%d-%m-%Y %H:%M', validators=[DataRequired()])
     group_id = IntegerField('Group ID', validators=[DataRequired()])
     submit = SubmitField('Schedule Event')
+
+class DeleteEventForm(FlaskForm):
+    event_id = IntegerField('Event ID', validators=[DataRequired()])
+    submit = SubmitField('Delete Event')
 class ReviewForm(FlaskForm):
     message = StringField('Message', validators=[DataRequired(), Length(max=1024)])
     to =  StringField('User', validators=[DataRequired(), Length(max=50)])
