@@ -4,7 +4,6 @@
 <div class="dashboard-container">
     <main class="content">
         <header>
-            <h1>Create Schedule</h1>
             <div class="header-actions">
                 <!-- Add any header actions here -->
             </div>
@@ -16,27 +15,23 @@
                
                 <div class="form-group">
                     {{ form.summary.label }}
-                    {{ form.summary(class="form-control") }}
-                </div>
-                <div class="form-group">
-                    {{ form.location.label }}
-                    {{ form.location(class="form-control") }}
+                    {{ form.summary(class="form-control", placeholder="e.g: C++ Arrays") }}
                 </div>
                 <div class="form-group">
                     {{ form.description.label }}
-                    {{ form.description(class="form-control") }}
+                    {{ form.description(class="form-control", placeholder="e.g: Implementing arrays in C++") }}
                 </div>
                 <div class="form-group">
                     {{ form.start_datetime.label }}
-                    {{ form.start_datetime(class="form-control") }}
+                    {{ form.start_datetime(class="form-control", placeholder="DD-MM-YYYY HH-MM") }}
                 </div>
                 <div class="form-group">
                     {{ form.end_datetime.label }}
-                    {{ form.end_datetime(class="form-control") }}
+                    {{ form.end_datetime(class="form-control", placeholder="DD-MM-YYYY HH-MM") }}
                 </div>
                 <div class="form-group">
                     {{ form.group_id.label }}
-                    {{ form.group_id(class="form-control") }}
+                    {{ form.group_id(class="form-control", placeholder="e.g: 2") }}
                 </div>
                 <div class="form-group">
                     {{ form.submit(class="btn btn-primary") }}

@@ -293,7 +293,6 @@ def register_routes(app):
         form = ScheduleForm()
         if form.validate_on_submit():
             summary = form.summary.data
-            location = form.location.data
             description = form.description.data
             start_datetime = form.start_datetime.data
             end_datetime = form.end_datetime.data
@@ -311,7 +310,7 @@ def register_routes(app):
             
             # Create calendar event
         
-            event, meet_link = create_calendar_event(summary, location, description, start_datetime, end_datetime, attendees_emails, group_id)
+            event, meet_link = create_calendar_event(summary, description, start_datetime, end_datetime, attendees_emails, group_id)
             
             if event:
                 # Send email notifications
@@ -322,7 +321,6 @@ def register_routes(app):
                 # Save event to the database
                 new_event = Event(
                     summary=summary,
-                    location=location,
                     description=description,
                     start_datetime=start_datetime,
                     end_datetime=end_datetime,

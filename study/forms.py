@@ -68,7 +68,6 @@ class CreateGroupForm(FlaskForm):
 
 class ScheduleForm(FlaskForm):
     summary = StringField('Summary', validators=[DataRequired(), Length(max=100)])
-    location = StringField('Location', validators=[DataRequired(), Length(max=100)])
     description = StringField('Description', validators=[DataRequired(), Length(max=255)])
     start_datetime = DateTimeField('Start Date and Time', format='%d-%m-%Y %H:%M', validators=[DataRequired()])
     end_datetime = DateTimeField('End Date and Time', format='%d-%m-%Y %H:%M', validators=[DataRequired()])
