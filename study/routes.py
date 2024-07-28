@@ -172,7 +172,13 @@ def register_routes(app):
         user_profile = Profile.query.filter_by(username=current_user.username).first()
         strong_subjects = user_profile.strong_subjects.split(',') if user_profile and user_profile.strong_subjects else []
         weak_subjects = user_profile.weak_subjects.split(',') if user_profile and user_profile.weak_subjects else []
-        return render_template('dashboard.html', user=user, groups=groups, user_profile=user_profile, strong_subjects=strong_subjects, weak_subjects=weak_subjects)
+       
+        # Get upcoming and past sessions
+        now = datetime.utcnow()
+        upcoming_sessions = Event.query.filter(Event.start_datetime > now).order_by(Event.start_datetime).limit(5).all()
+        past_sessions = Event.query.filter(Event.start_datetime < now).order_by(Event.start_datetime.desc()).limit(5).all()
+       
+        return render_template('dashboard.html', user=user, groups=groups, user_profile=user_profile, strong_subjects=strong_subjects, weak_subjects=weak_subjects, upcoming_sessions=upcoming_sessions, past_sessions=past_sessions)
     
     # Logout Route
     @app.route('/logout')
@@ -287,7 +293,6 @@ def register_routes(app):
         form = ScheduleForm()
         if form.validate_on_submit():
             summary = form.summary.data
-            location = form.location.data
             description = form.description.data
             start_datetime = form.start_datetime.data
             end_datetime = form.end_datetime.data
@@ -298,20 +303,33 @@ def register_routes(app):
             if not group:
                 return 'Group not found', 404
             
+           
             # Get all group members
             members = GroupMember.query.filter_by(group_id=group_id).all()
             attendees_emails = [member.user.email for member in members]
             
             # Create calendar event
         
-            event, meet_link = create_calendar_event(summary, location, description, start_datetime, end_datetime, attendees_emails, group_id)
+            event, meet_link = create_calendar_event(summary, description, start_datetime, end_datetime, attendees_emails, group_id)
             
             if event:
                 # Send email notifications
                 subject = f"New Event Created: {summary}"
                 body = f"An event has been created: <a href='{event.get('htmlLink')}'>View Event</a><br>Google Meet Link: <a href='{meet_link}'>Join Meeting</a>"
-                send_email_notification(attendees_emails, subject, body)
+                send_email_notification(attendees_emails, subject, body, summary)
                 
+                # Save event to the database
+                new_event = Event(
+                    summary=summary,
+                    description=description,
+                    start_datetime=start_datetime,
+                    end_datetime=end_datetime,
+                    meet_link=meet_link,
+                    group_id=group_id
+                )
+                db.session.add(new_event)
+                db.session.commit()
+                flash_message('Event created successfully!', 'success')
                 return redirect(url_for('group'))
             else:
                 return 'An error occurred while creating the event.', 500

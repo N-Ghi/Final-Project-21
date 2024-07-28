@@ -14,12 +14,38 @@
 
         <section id="upcoming-sessions" class="section">
             <h3>Upcoming Sessions</h3>
-            <!-- Display upcoming sessions, if none ask the user to create a new session -->
-            <!-- Only users in a group can create a session -->
+            {% if upcoming_sessions %}
+                <ul>
+                    {% for session in upcoming_sessions %}
+                        <li>
+                            <strong>{{ session.summary }}</strong><br>
+                            <span>{{ session.start_datetime.strftime('%d-%m-%Y %H:%M') }} - {{ session.end_datetime.strftime('%d-%m-%Y %H:%M') }}</span><br>
+                            <span>Group ID: {{ session.group_id }}</span><br>
+                            <span>Description: {{ session.description }}</span><br>
+                            <a href="{{ session.meet_link }}" target="_blank">Join Meeting</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No upcoming sessions.</p>
+            {% endif %}
         </section>
         <section id="past-sessions" class="section">
             <h3>Past Sessions</h3>
-            <!-- Display past sessions -->
+            {% if past_sessions %}
+            <ul>
+                {% for session in past_sessions %}
+                    <li>
+                        <strong>{{ session.summary }}</strong><br>
+                        <span>{{ session.start_datetime.strftime('%d-%m-%Y %H:%M') }} - {{ session.end_datetime.strftime('%d-%m-%Y %H:%M') }}</span><br>
+                        <span>Group ID: {{ session.group_id }}</span><br>
+                        <span>Description: {{ session.description }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No past sessions.</p>
+        {% endif %}
         </section>
         <section id="your-groups" class="section">
             <h3>Your Groups</h3>
@@ -169,6 +195,9 @@
     }
 </style>
 
+{% endblock %}
+
+{% block scripts %}
 <script>
     function navigateTo(url) {
         window.location.href = url;
