@@ -28,18 +28,15 @@ languages = [
     ('English', 'English'), ('French', 'French'), ('Spanish', 'Spanish'), 
     ('Swahili', 'Swahili'), ('Kinyarwanda', 'Kinyarwanda')
 ]
-
 class RegisterForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=4, max=25)])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=8, max=50)])
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Register')
-
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=4, max=25)])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=8, max=50)])
     submit = SubmitField('Login')
-
 class ProfileForm(FlaskForm):
     school = StringField('School/College Name', validators=[DataRequired(), Length(max=100)])
     primary_language = SelectField('Primary Language', choices=languages, validators=[DataRequired()])
@@ -49,15 +46,12 @@ class ProfileForm(FlaskForm):
     strong_subjects = SelectMultipleField('Select your strong subjects', choices=subjects, validators=[InputRequired(), max_length_check])
     weak_subjects = SelectMultipleField('Select your weak subjects', choices=subjects, validators=[InputRequired(), max_length_check])
     submit = SubmitField('Complete Profile')
-
 class VerifyEmailForm(FlaskForm):
     otp = StringField('Verify your email', validators=[DataRequired(), Length(min=6, max=6)])
     submit = SubmitField('Verify')
-
 class ResendConfirmationForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Resend Confirmation Email')
-
 class CreateGroupForm(FlaskForm):
     name = StringField('Group Name', validators=[DataRequired(), Length(max=100)])
     subject = SelectField('Select group subject', choices=subjects, validators=[InputRequired()])
@@ -65,7 +59,6 @@ class CreateGroupForm(FlaskForm):
     days = SelectMultipleField('Select your days availability', choices=days_of_week, validators=[InputRequired()])
     times = SelectMultipleField('Select your time availability', choices=time_slots, validators=[InputRequired()])
     submit = SubmitField('Create Group')
-
 class ScheduleForm(FlaskForm):
     summary = StringField('Summary', validators=[DataRequired(), Length(max=100)])
     description = StringField('Description', validators=[DataRequired(), Length(max=255)])
@@ -73,3 +66,8 @@ class ScheduleForm(FlaskForm):
     end_datetime = DateTimeField('End Date and Time', format='%d-%m-%Y %H:%M', validators=[DataRequired()])
     group_id = IntegerField('Group ID', validators=[DataRequired()])
     submit = SubmitField('Schedule Event')
+class ReviewForm(FlaskForm):
+    message = StringField('Message', validators=[DataRequired(), Length(max=1024)])
+    to =  StringField('User', validators=[DataRequired(), Length(max=50)])
+    rating = StringField('Rating',validators=[DataRequired(),Length(max=5)])
+    submit = SubmitField('Rate')

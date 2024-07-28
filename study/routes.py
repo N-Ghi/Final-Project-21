@@ -3,6 +3,7 @@ from study.forms import *
 from study.db_models import *
 from flask_login import login_required, current_user, login_user, logout_user
 from study import *
+from sqlalchemy import or_, and_
 from study.google_apis import *
 
 def flash_message(message, category):
@@ -29,7 +30,7 @@ def register_routes(app):
                 flash_message('Username or email already exists. Please choose a different one.', 'danger')
                 return render_template('register.html', form=form)
 
-            new_user = User(username=username, email=email, password=password, confirmed=False)
+            new_user = User(username=username, email=email, password=password, confirmed=True)
             db.session.add(new_user)
             db.session.commit()
             send_confirmation_email(new_user.email)
@@ -189,10 +190,24 @@ def register_routes(app):
         return redirect(url_for('home'))
     
     #See gruops
-    @app.route('/group')
+    @app.route('/group',methods=['GET'])
     @login_required
     def group():
-        all_groups = Group.query.all()
+        search = request.args.get('subject')
+        day = request.args.get('day')
+        time = request.args.get('time')
+        filters = []
+        query = Group.query
+        if search:
+            filters.append(or_(Group.subject.ilike(f'%{search}%'), Group.name.ilike(f'%{search}%')))
+        if day:
+            filters.append(Group.days.ilike(f'%{day}%'))
+        if time:
+            filters.append(Group.times.ilike(f'%{time}%'))
+        if filters:
+            query = query.filter(and_(*filters))
+
+        all_groups = query.all()
         user_groups = Group.query.join(GroupMember).filter(GroupMember.user_id == current_user.username).all()
         return render_template('group.html', all_groups=all_groups, user_groups=user_groups)
     
@@ -229,12 +244,6 @@ def register_routes(app):
     def join_group(group_id):
         # Handle joining the group
         group = Group.query.get_or_404(group_id)
-
-        # Check if the user is already a member of the group
-        membership = GroupMember.query.filter_by(group_id=group_id, user_id=current_user.username).first()
-        if membership:
-            flash_message('You are already a member of this group.', 'danger')
-            return redirect(url_for('group'))
         if group and len(group.members) < 10:
             # Add user to the group
             new_member = GroupMember(group_id=group.id, user_id=current_user.username)
@@ -250,8 +259,10 @@ def register_routes(app):
     @login_required
     def delete_group(group_id):
         group = Group.query.get_or_404(group_id)
+        if group.creator != current_user.username:
+            flash_message('You are not authorized to delete this group.', 'danger')
+            return redirect(url_for('group'))
         
-
         # Remove all members of the group
         GroupMember.query.filter_by(group_id=group_id).delete()
         db.session.delete(group)
@@ -275,7 +286,6 @@ def register_routes(app):
             flash_message('You are not a member of this group.', 'danger')
 
         return redirect(url_for('group'))
-    
     # View Group Details Route
     @app.route('/group/view/<int:group_id>', methods=['GET','POST'])
     @login_required
@@ -284,6 +294,39 @@ def register_routes(app):
         members = GroupMember.query.filter_by(group_id=group_id).all() 
        
         return render_template('group_details.html', group=group, members=members)
+  
+    # add review
+    @app.route('/review/add',methods=['GET','POST'])
+    @login_required
+    def add_review():
+        form = ReviewForm()
+        if form.validate_on_submit:
+            user = User.query.filter_by(email= form.to.data).first()
+            if user:
+                newReview = Review(
+                    message = form.message.data,
+                    userto = user.username,
+                    userfrom = current_user.username,
+                    rating= form.rating.data  
+                )
+                db.session.add(newReview)
+                db.session.commit()
+                flash_message('Review added successfully! Thanks for your contributions', 'success')
+                myReviews = Review.query.filter(Review.userto==current_user.username).all()
+                otherReviews = Review.query.filter(Review.userfrom==current_user.username).all()
+                return render_template('reviews.html', my_reviews=myReviews,other_reviews=otherReviews)
+            else:
+                if form.to.data is not None:
+                    flash_message('User not found', 'danger')
+        return render_template('add_review.html', form=form)
+    
+    @app.route('/review/view',methods=['GET','POST'])
+    @login_required
+    def reviews():  
+       myReviews = Review.query.filter(Review.userto==current_user.username).all()
+       otherReviews = Review.query.filter(Review.userfrom==current_user.username).all()
+       return render_template('reviews.html', my_reviews=myReviews,other_reviews=otherReviews)
+    
         
     # Create Schedule Route
     @app.route('/event/create', methods=['GET', 'POST'])

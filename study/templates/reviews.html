@@ -1,0 +1,32 @@
+{% extends 'navbar.html' %}
+{% block title %}Groups{% endblock %}
+{% block content %}
+
+<p>Add a review</p>
+<a href="{{ url_for('add_review') }}">Review someone</a>
+
+<h1>Your reviews from others</h1>
+
+{% if my_reviews|length == 0 %}
+    <p>No one reviewed you</p>
+{% else %}
+    <p>My reviews</p>
+    {% for myReview in my_reviews %}
+        <p> {{myReview.rating}}/5</p>
+        <p> {{myReview.message}}</p>
+        <p> {{myReview.userfrom}}</p>
+    {% endfor %}   
+{% endif %}
+    
+<h2>Your reviews to others</h2>
+{% if other_reviews|length == 0 %}
+    <p>You have not reviewed anyone</p>
+{% else %}
+    <p>My reviews</p>
+    {% for myReview in other_reviews %}
+        <p> {{myReview.rating}}/5</p>
+        <p> {{myReview.message}}</p>
+        <p> {{myReview.userfrom}}</p>
+    {% endfor %}   
+{% endif %}
+{% endblock %}

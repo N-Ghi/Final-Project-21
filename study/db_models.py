@@ -50,6 +50,15 @@ class GroupMember(db.Model):
     group = db.relationship('Group', back_populates='members')
     user = db.relationship('User', back_populates='groups')
 
+class Review(db.Model):
+    _tablename_ = 'reviews'
+    id = db.Column(db.Integer,  primary_key=True, autoincrement=True)
+    message = db.Column(db.String(1024),nullable = False)
+    rating = db.Column(db.Integer,nullable = False)
+    userto = db.Column(db.String(50),nullable = False)
+    userfrom = db.Column(db.String(50),nullable = False)    
+
+
 class Event(db.Model):
     __tablename__ = 'event'
 
