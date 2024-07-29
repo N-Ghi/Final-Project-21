@@ -88,12 +88,8 @@
     </style>
 </head>
 <body>
-    <header>
-        <div class="top-header">
-            <div class="logo">Buddy Study Finder</div>
-            <!-- Add other header content or navigation links here -->
-        </div>
-    </header>
+  {%block header%}
+  {%endblock%}
     <main>
         <div class="container">
             {% with messages = get_flashed_messages(with_categories=true) %}
