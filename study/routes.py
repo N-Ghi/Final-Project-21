@@ -197,7 +197,8 @@ def register_routes(app):
         day = request.args.get('day')
         time = request.args.get('time')
         filters = []
-        query = Group.query
+        query = Group.query.join(GroupMember)
+        filters.append(GroupMember.user_id!=current_user.username)
         if search:
             filters.append(or_(Group.subject.ilike(f'%{search}%'), Group.name.ilike(f'%{search}%')))
         if day:
@@ -366,9 +367,7 @@ def register_routes(app):
             
             if event:
                 # Send email notifications
-                subject = f"New Event Created: {summary}"
-                body = f"An event has been created: <a href='{event.get('htmlLink')}'>View Event</a><br>Google Meet Link: <a href='{meet_link}'>Join Meeting</a>"
-                send_email_notification(attendees_emails, subject, body, summary)
+                send_email_notification(attendees_emails, meet_link, summary)
                 
                 # Save event to the database
                 new_event = Event(
