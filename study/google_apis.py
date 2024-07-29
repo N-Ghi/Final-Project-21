@@ -138,10 +138,9 @@ def create_calendar_event(summary, description, start_datetime, end_datetime, at
         print(f'An error occurred: {error}')
         return None, None
 
-def send_email_notification(attendees_emails, event_link, meet_link, summary):
+def send_email_notification(attendees_emails,meet_link, summary):
     subject = f"New Event Created: {summary}"
     body = (
-        f"An event has been created: <a href='{event_link}'>View Event</a><br>"
         f"Google Meet Link: <a href='{meet_link}'>Join Meeting</a>"
     )
     
