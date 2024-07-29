@@ -75,8 +75,8 @@ class CreateGroupForm(FlaskForm):
     name = StringField('Group Name', validators=[DataRequired(), Length(max=100)])
     subject = SelectField('Select group subject', choices=subjects, validators=[InputRequired()])
     
-    days = SelectMultipleField('Select your days availability', choices=days_of_week, validators=[InputRequired()])
-    times = SelectMultipleField('Select your time availability', choices=time_slots, validators=[InputRequired()])
+    days = SelectMultipleField('Select group days', choices=days_of_week, validators=[InputRequired()])
+    times = SelectMultipleField('Select group times', choices=time_slots, validators=[InputRequired()])
     submit = SubmitField('Create Group')
 class ScheduleForm(FlaskForm):
     summary = StringField('Summary', validators=[DataRequired(), Length(max=100)])
@@ -85,7 +85,6 @@ class ScheduleForm(FlaskForm):
     end_datetime = DateTimeField('End Date and Time', format='%d-%m-%Y %H:%M', validators=[DataRequired()])
     group_id = IntegerField('Group ID', validators=[DataRequired()])
     submit = SubmitField('Schedule Event')
-
 class DeleteEventForm(FlaskForm):
     event_id = IntegerField('Event ID', validators=[DataRequired()])
     submit = SubmitField('Delete Event')
