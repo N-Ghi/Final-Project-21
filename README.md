@@ -95,6 +95,6 @@ For more information or to contribute, please contact any of the team members:
 
 ---
 
-We believe Study Buddy Finder will significantly improve the study experiences of students by making it easier to find compatible study partners and groups. Join us in creating a more collaborative and efficient learning environment!
+We believe Study Buddy Finder will significantly improve the study experiences of students by making it easier to find compatible study partners and groups.
 
 
