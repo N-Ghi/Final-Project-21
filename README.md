@@ -31,74 +31,71 @@ These instructions will help you set up the project on your local machine for de
 ### Prerequisites
 
 Ensure you have the following installed:
-- Node.js
-- npm (Node Package Manager)
+- Flask
 - Git
 
 ## Installation
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/study-buddy-finder.git
-   cd study-buddy-finder
+   git clone https://github.com/N-Ghi/StudyBuddyFinder.git
+   cd StudyBuddyFinder
    ```
 
 2. **Install dependencies:**
    ```bash
-   npm install
+   pip install 
    ```
 
 ## Usage
 
 1. **Start the development server:**
    ```bash
-   npm start
+   python app.py
    ```
 
 2. **Access the application:**
-   Open your web browser and navigate to `http://localhost:3000`.
+   Open your web browser and navigate to `https://studybuddyfinder.onrender.com/`.
 
 ## Testing
 
 1. **Run unit tests:**
    ```bash
-   npm test
+   pytest
    ```
 
 2. **Run end-to-end tests:**
    ```bash
-   npm run test:e2e
+   python test_e2e.py
    ```
 
 ## Deployment
 
 1. **Build for production:**
    ```bash
-   npm run build
+   .............................
    ```
 
 2. **Deploy to your hosting service of choice.** For example, deploying to Netlify:
    - Connect your repository to Netlify.
-   - Set the build command to `npm run build`.
-   - Set the publish directory to `build`.
-
-## Contributing
-
-We welcome contributions from the community! Please read the [CONTRIBUTING.md](CONTRIBUTING.md) file for guidelines on how to get involved.
+   - Set the build command to `...............................`.
+   - Set the publish directory to `............................`.
 
 ## Code of Conduct
 
-Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project, you agree to abide by its terms.
+Please note that this project is released with a [Contributor Code of Conduct](#https://docs.google.com/document/d/1bvLIHzZRbKmordjgevR5kYZ4MpXy-FsOESbzBhnvC-8/edit). By participating in this project, you agree to abide by its terms.
 
 ## Contact
 
 For more information or to contribute, please contact any of the team members:
-- John Ongeri Ouma (Frontend Developer)
-- Nagasaro Ghislaine Iyankijije (Backend Developer)
-- Irenee Gisubizo Dusingizimana (UI/UX Designer)
-- Cyusa Munezero Keny (Backend Developer)
-- Armand Kayiranga (Quality Assurance and Tester)
+- John Ongeri Ouma 
+- Nagasaro Ghislaine Iyankijije 
+- Irenee Gisubizo Dusingizimana 
+- Cyusa Munezero Keny 
+- Armand Kayiranga 
 
 ---
 
 We believe Study Buddy Finder will significantly improve the study experiences of students by making it easier to find compatible study partners and groups. Join us in creating a more collaborative and efficient learning environment!
+
+
