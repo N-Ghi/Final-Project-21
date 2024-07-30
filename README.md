@@ -8,7 +8,6 @@
 - [Usage](#usage)
 - [Testing](#testing)
 - [Deployment](#deployment)
-- [Contributing](#contributing)
 - [Code of Conduct](#code-of-conduct)
 - [Contact](#contact)
 
