@@ -54,7 +54,7 @@ Ensure you have the following installed:
    ```
 
 2. **Access the application:**
-   Open your web browser and navigate to `https://studybuddyfinder.onrender.com/`.
+   Open your web browser and navigate to `(https://studybuddyfinder.onrender.com)`.
 
 ## Testing
 
