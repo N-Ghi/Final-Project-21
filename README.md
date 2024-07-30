@@ -93,7 +93,7 @@ For more information or to contribute, please contact any of the team members:
 - Cyusa Munezero Keny 
 - Armand Kayiranga
 
-  GitHub: [Study Buddy Finder](https://github.com/N-Ghi/StudyBuddyFinder.git)
+### GitHub: [Study Buddy Finder](https://github.com/N-Ghi/StudyBuddyFinder.git)
 
 ---
 
