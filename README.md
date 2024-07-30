@@ -82,7 +82,7 @@ Ensure you have the following installed:
 
 ## Code of Conduct
 
-Please note that this project is released with a [Contributor Code of Conduct](#https://docs.google.com/document/d/1bvLIHzZRbKmordjgevR5kYZ4MpXy-FsOESbzBhnvC-8/edit). By participating in this project, you agree to abide by its terms.
+Please note that this project is released with a [Contributor Code of Conduct](https://docs.google.com/document/d/1bvLIHzZRbKmordjgevR5kYZ4MpXy-FsOESbzBhnvC-8/edit). By participating in this project, you agree to abide by its terms.
 
 ## Contact
 
