@@ -91,7 +91,9 @@ For more information or to contribute, please contact any of the team members:
 - Nagasaro Ghislaine Iyankijije 
 - Irenee Gisubizo Dusingizimana 
 - Cyusa Munezero Keny 
-- Armand Kayiranga 
+- Armand Kayiranga
+
+  GitHub: [Study Buddy Finder](https://github.com/N-Ghi/StudyBuddyFinder.git)
 
 ---
 
