@@ -72,7 +72,7 @@ Ensure you have the following installed:
 
 1. **Build for production:**
    ```bash
-   .............................
+   pip install -r requirements.txt
    ```
 
 2. **Deploy to your hosting service of choice.** For example, deploying to Netlify:
