@@ -77,8 +77,14 @@ Ensure you have the following installed:
 
 2. **Deploy to your hosting service of choice.** For example, deploying to Netlify:
    - Connect your repository to Netlify.
-   - Set the build command to `...............................`.
-   - Set the publish directory to `............................`.
+   - Set the build command to
+     ```Bash
+     pip install -r requirements.txt
+     ```
+   - Set the publish directory to
+      ```Bash
+      gunicorn -w 4 -b 0.0.0.0:8000 app:app
+      ```
 
 ## Code of Conduct
 
